@@ -38,10 +38,10 @@ python ema_drawing.py -f [FILE_PATH] -el [EMA_LENGTH] -t [TIMEFRAME] -e [EXPORT_
 
 To generate a chart and print EMA values:
 ```bash
-python script_name.py -f data.csv -el 10 -t 1h -e print -cs
+python ema_drawing.py -f data.csv -el 10 -t 1h -e print -cs
 ```
 
 To generate a chart, save it, and also save OHLC and EMA values to a CSV file:
 ```bash
-python script_name.py -f data.csv -el 10 -t 1d -e csv_ohlc -ep output_ema.csv -cs -co output_chart.png
+python ema_drawing.py -f data.csv -el 10 -t 1d -e csv_ohlc -ep output_ema.csv -cs -co output_chart.png
 ```
