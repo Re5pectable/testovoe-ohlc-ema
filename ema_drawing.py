@@ -43,7 +43,6 @@ def validate_timeframe(timeframe: str):
 
 def calculate_ohlc(data: pd.DataFrame, timeframe: str):
     """Calculate OHLC data from provided dataframe."""
-    print(timeframe)
     data = data.resample(timeframe).ohlc()
     data.columns = data.columns.droplevel()
     return data
