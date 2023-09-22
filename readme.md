@@ -27,7 +27,7 @@ python ema_drawing.py -f [FILE_PATH] -el [EMA_LENGTH] -t [TIMEFRAME] -e [EXPORT_
 - `--file_input, -f`: Path to the CSV data file. **(Required)**
 - `--ema_length, -el`: Length for EMA calculation. Should be a positive integer. **(Required)**
 - `--timeframe, -t`: Timeframe for resampling. Examples: 1h, 15m, 1d, 123mo. Should start with a sequence of digits followed by a sequence of letters. **(Required)**
-- `--export, -e`: Export method for EMA data. Options: "print" (to console), "csv_ohlc" (CSV with OHLC), "csv_ema" (CSV with only EMA). **(Required)**
+- `--export, -e`: Export method for EMA data. Options: "print" (to console), "csv_ohlc" (CSV with OHLC), "csv_ema" (CSV with only EMA).
 - `--export_ema_path, -ep`: Path to save the exported EMA data. Required if `--export` is set to "csv_ohlc" or "csv_ema".
 - `--chart_show, -cs`: Flag to show the chart after generation.
 - `--chart_width, -cw`: Width in pixels of the chart. Default is 1600 pixels.

@@ -77,7 +77,14 @@ def export_ema(data: pd.DataFrame, method: str, path: str = None):
     elif method == 'csv_ema':
         export_ema_to_csv(data, path)
 
-def generate_chart(data: pd.DataFrame, resolution: tuple[int, int], show: bool = True, output_file: str = None):
+def generate_chart(
+    data: pd.DataFrame,
+    timeframe: str,
+    ema_length: int,
+    resolution: tuple[int, int],
+    show: bool = True,
+    output_file: str = None
+):
     """Generate the candlestick chart with EMA overlay and save to a file."""
     fig = go.Figure(data=[
         go.Candlestick(
@@ -97,7 +104,7 @@ def generate_chart(data: pd.DataFrame, resolution: tuple[int, int], show: bool =
         ]
     )
     fig.update_layout(
-        title="Candlestick Chart with EMA Overlay",
+        title=f"Candlestick Chart with EMA | Timeframe={timeframe} Length={ema_length}",
         width=resolution[0],
         height=resolution[1],
         xaxis_rangeslider_visible=False
@@ -130,7 +137,6 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--export', '-e',
-        required=True,
         choices=['print', 'csv_ohlc', 'csv_ema'],
         dest='export_option',
         help='Export EMA data. Options: "print" (to console), "csv_ohlc" (CSV with OHLC), "csv_ema" (CSV with EMA only).'
@@ -177,11 +183,14 @@ if __name__ == '__main__':
     
     if args.export_option:
         export_ema(data, args.export_option, args.export_path)
-        
+    
     if args.show_chart or args.chart_output:
         resolution = (args.chart_width, args.chart_height)
         generate_chart(
-            data, resolution,
+            data,
+            args.timeframe,
+            args.ema_length,
+            resolution, 
             show=args.show_chart,
             output_file=args.chart_output
         )

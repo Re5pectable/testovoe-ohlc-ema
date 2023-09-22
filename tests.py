@@ -71,7 +71,7 @@ class TestCandlestickWithEMA(unittest.TestCase):
         })
         df.index = pd.to_datetime(["2021-01-01", "2021-01-02", "2021-01-03"])
         output_file = "test_output.png"
-        generate_chart(df, (800, 600), output_file=output_file, show=False)
+        generate_chart(df, '1D', 5, (800, 600), output_file=output_file, show=False)
         self.assertTrue(os.path.exists(output_file))
         self.assertGreater(os.path.getsize(output_file), 0)
         os.remove(output_file)
