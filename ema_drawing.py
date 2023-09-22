@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -30,14 +31,19 @@ def load_data(filename):
 
 def validate_timeframe(timeframe: str):
     """Validate the timeframe against allowed pandas resampling frequencies."""
-    base_timeframe = ''.join([char for char in timeframe if not char.isdigit()])
+    match = re.match(r'(\d+)([a-zA-Z]+)$', timeframe)
+    if not match:
+        raise ValueError(f"Invalid timeframe format '{timeframe}'. Expected format: DD...SS... (digits followed by letters). Example: '1h', '12345mo'.")
+
+    quantity, base_timeframe = match.groups()
     
     if base_timeframe not in TIMEFRAMES_MAPPING.keys():
-        raise ValueError(f"Invalid timeframe '{timeframe}'. Choose from: {', '.join(TIMEFRAMES_MAPPING.keys())} (with prefix number). Example: '1h'.")
-    return TIMEFRAMES_MAPPING[base_timeframe]
+        raise ValueError(f"Invalid timeframe '{base_timeframe}'. Choose from: {', '.join(TIMEFRAMES_MAPPING.keys())}. Example: '1h'.")
+    return str(quantity) + TIMEFRAMES_MAPPING[base_timeframe]
 
 def calculate_ohlc(data: pd.DataFrame, timeframe: str):
     """Calculate OHLC data from provided dataframe."""
+    print(timeframe)
     data = data.resample(timeframe).ohlc()
     data.columns = data.columns.droplevel()
     return data
@@ -133,14 +139,14 @@ if __name__ == '__main__':
         '--chart_width', '-cw',
         dest='chart_width',
         type=int,
-        default=1920,
+        default=1600,
         help='Width in pixels of the chart.'
     )
     parser.add_argument(
         '--chart_height', '-ch',
         dest='chart_height',
         type=int,
-        default=1080,
+        default=800,
         help='Height in pixels of the chart.'
     )
     parser.add_argument(
@@ -160,8 +166,9 @@ if __name__ == '__main__':
     if args.export_option:
         export_ema(data, args.export_option, args.export_path)
     if args.show_chart or args.chart_output:
+        resolution = (args.chart_width, args.chart_height)
         generate_chart(
-            data, (args.chart_width, args.chart_height),
+            data, resolution,
             show=args.show_chart,
             output_file=args.chart_output
         )
