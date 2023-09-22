@@ -36,12 +36,52 @@ python ema_drawing.py -f [FILE_PATH] -el [EMA_LENGTH] -t [TIMEFRAME] -e [EXPORT_
 
 ## Examples:
 
-To generate a chart and print EMA values:
-```bash
-python ema_drawing.py -f data.csv -el 10 -t 1h -e print -cs
+Basic execution:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e print
 ```
 
-To generate a chart, save it, and also save OHLC and EMA values to a CSV file:
-```bash
-python ema_drawing.py -f data.csv -el 10 -t 1d -e csv_ohlc -ep output_ema.csv -cs -co output_chart.png
+Export EMA data to CSV with OHLC values:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e csv_ohlc -ep ema_output_ohlc.csv
+```
+
+Export only the EMA data to a CSV:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e csv_ema -ep ema_output.csv
+```
+
+Show the chart after generating it:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e print -cs
+```
+
+Adjust chart resolution and save the chart to a file:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e print -cs -cw 1280 -ch 720 -co output_chart.png
+```
+
+Use a different EMA length and timeframe:
+```
+python ema_drawing.py -f data.csv -el 10 -t 15m -e print
+```
+
+Do not show the chart, but save it to a file:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e print -co output_chart.png
+```
+
+Export EMA data to CSV with OHLC values and save chart:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1h -e csv_ohlc -ep ema_output_ohlc.csv -co output_chart.png
+```
+
+Use a different timeframe:
+```
+python ema_drawing.py -f data.csv -el 4 -t 1d -e print -cs
+```
+
+Combination of different parameters:
+```
+python ema_drawing.py -f data.csv -el 20 -t 4h -e csv_ema -ep ema_output.csv -cs -cw 1024 -ch 768 -co custom_chart.png
 ```

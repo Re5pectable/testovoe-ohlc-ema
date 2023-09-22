@@ -14,7 +14,7 @@ TIMEFRAMES_MAPPING = {
     's': 'S',
 }
 
-def load_data(filename):
+def load_data(filename: str):
     """Load data from CSV and preprocess it."""
     if not os.path.exists(filename):
         raise ValueError(f"File '{filename}' not found.")
@@ -174,8 +174,10 @@ if __name__ == '__main__':
     data = load_data(args.file)
     data = calculate_ohlc(data, timeframe)
     data = add_ema(data, args.ema_length)
+    
     if args.export_option:
         export_ema(data, args.export_option, args.export_path)
+        
     if args.show_chart or args.chart_output:
         resolution = (args.chart_width, args.chart_height)
         generate_chart(
