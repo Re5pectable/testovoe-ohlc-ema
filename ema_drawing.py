@@ -47,6 +47,19 @@ def add_ema(data: pd.DataFrame, ema_length: int):
     data['EMA'] = data.close.ewm(span=ema_length, adjust=False).mean()
     return data
 
+def export_ema(data: pd.DataFrame, method: str, path: str = None):
+    """Export the EMA data based on the specified method."""
+    if method == 'print':
+        print(data['EMA'].values.tolist())
+    elif method == 'csv_ohlc':
+        if not path:
+            raise ValueError("A file path is required for CSV export.")
+        data.to_csv(path)
+    elif method == 'csv_ema':
+        if not path:
+            raise ValueError("A file path is required for CSV export.")
+        data[['EMA']].to_csv(path)
+
 def generate_chart(data: pd.DataFrame, resolution: tuple[int, int], show: bool = True, output_file: str = None):
     """Generate the candlestick chart with EMA overlay and save to a file."""
     fig = go.Figure(data=[
@@ -99,8 +112,20 @@ if __name__ == '__main__':
         help='Timeframe for resampling. Examples: 1h, 15m, 1d, etc.'
     )
     parser.add_argument(
+        '--export', '-e',
+        required=True,
+        choices=['print', 'csv_ohlc', 'csv_ema'],
+        dest='export_option',
+        help='Export EMA data. Options: "print" (to console), "csv_ohlc" (CSV with OHLC), "csv_ema" (CSV with EMA only).'
+    )
+    parser.add_argument(
+        '--export_ema_path', '-ep',
+        dest='export_path',
+        help='Path to save the exported EMA data. Required if --export_ema is set to "csv_ohlc" or "csv_ema".'
+    )
+    parser.add_argument(
         '--chart_show', '-cs',
-        action='store_false',
+        action='store_true',
         dest='show_chart',
         help='Show the chart after generation.'
     )
@@ -132,8 +157,11 @@ if __name__ == '__main__':
     data = load_data(args.file)
     data = calculate_ohlc(data, timeframe)
     data = add_ema(data, args.ema_length)
+    if args.export_option:
+        export_ema(data, args.export_option, args.export_path)
     if args.show_chart or args.chart_output:
-        generate_chart(data, (args.chart_width, args.chart_height),
-                       show=args.show_chart,
-                       output_file=args.chart_output
-                    )
+        generate_chart(
+            data, (args.chart_width, args.chart_height),
+            show=args.show_chart,
+            output_file=args.chart_output
+        )
