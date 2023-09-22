@@ -18,9 +18,9 @@ def load_data(filename):
     """Load data from CSV and preprocess it."""
     if not os.path.exists(filename):
         raise ValueError(f"File '{filename}' not found.")
-    
+
     data = pd.read_csv(filename)
-    
+
     if 'TS' not in data.columns:
         raise ValueError("Expected 'TS' column not found in the CSV.")
     
@@ -52,18 +52,30 @@ def add_ema(data: pd.DataFrame, ema_length: int):
     data['EMA'] = data.close.ewm(span=ema_length, adjust=False).mean()
     return data
 
+def print_ema(data: pd.DataFrame):
+    """Print the EMA values."""
+    print(data['EMA'].values.tolist())
+
+def export_ohlc_to_csv(data: pd.DataFrame, path: str):
+    """Export data with OHLC values to a CSV file."""
+    if not path:
+        raise ValueError("A file path is required for CSV export.")
+    data.to_csv(path)
+
+def export_ema_to_csv(data: pd.DataFrame, path: str):
+    """Export only the EMA values to a CSV file."""
+    if not path:
+        raise ValueError("A file path is required for CSV export.")
+    data[['EMA']].to_csv(path)
+
 def export_ema(data: pd.DataFrame, method: str, path: str = None):
     """Export the EMA data based on the specified method."""
     if method == 'print':
-        print(data['EMA'].values.tolist())
+        print_ema(data)
     elif method == 'csv_ohlc':
-        if not path:
-            raise ValueError("A file path is required for CSV export.")
-        data.to_csv(path)
+        export_ohlc_to_csv(data, path)
     elif method == 'csv_ema':
-        if not path:
-            raise ValueError("A file path is required for CSV export.")
-        data[['EMA']].to_csv(path)
+        export_ema_to_csv(data, path)
 
 def generate_chart(data: pd.DataFrame, resolution: tuple[int, int], show: bool = True, output_file: str = None):
     """Generate the candlestick chart with EMA overlay and save to a file."""
